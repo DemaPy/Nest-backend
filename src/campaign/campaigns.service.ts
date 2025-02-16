@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { CreateCampaignDto } from 'src/utils/lib/dto/campaign/create';
 import { responseObject } from 'src/utils/responseInterface';
 
 @Injectable()
@@ -23,5 +24,9 @@ export class CampaignsService {
   getOne(id: string) {
     const campaign = this.campaigns.find((campaign) => campaign.id === id);
     return responseObject({ data: campaign ?? null });
+  }
+
+  create(campaign: CreateCampaignDto) {
+    return campaign;
   }
 }

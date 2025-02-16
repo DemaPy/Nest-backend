@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CampaignsService } from './campaigns.service';
+import { CreateCampaignDto } from 'src/utils/lib/dto';
 
 @Controller('campaigns')
 export class CampaignsController {
@@ -13,5 +14,11 @@ export class CampaignsController {
   @Get(':id')
   getOne(@Param() params: { id: string }) {
     return this.campaignService.getOne(params.id);
+  }
+
+  @Post()
+  create(@Body() createCampaignDto: CreateCampaignDto) {
+    console.log(createCampaignDto);
+    return this.campaignService.create(createCampaignDto);
   }
 }
