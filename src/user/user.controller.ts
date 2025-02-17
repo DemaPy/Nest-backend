@@ -7,11 +7,20 @@ import {
   Param,
   Delete,
   InternalServerErrorException,
+  ParseIntPipe,
+  Query,
+  ParseBoolPipe,
+  HttpException,
+  HttpStatus,
+  Headers,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@prisma/client';
 import { responseObject } from 'src/utils/responseInterface';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -27,7 +36,8 @@ export class UserController {
   }
 
   @Get()
-  async findAll() {
+  @UseGuards(AuthGuard)
+  async findAll(@Request() req) {
     try {
       return responseObject({ data: await this.userService.findAll() });
     } catch (error) {
@@ -36,17 +46,26 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @UseGuards(AuthGuard)
+  async findOne(@Param('id', ParseIntPipe) id: string) {
+    try {
+      const user = await this.userService.findOne(+id);
+      if (!user) {
+        return new HttpException('User not found', HttpStatus.NOT_FOUND)
+      }
+      return responseObject({ data: user });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id', ParseIntPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     return this.userService.remove(+id);
   }
 }

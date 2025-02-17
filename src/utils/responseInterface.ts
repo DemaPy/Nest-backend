@@ -1,6 +1,8 @@
-export function responseObject({ data }: { data: any }) {
+import { HttpStatus } from "@nestjs/common";
+
+export function responseObject({ data, status }: { data: any, status?: HttpStatus }) {
   return {
-    status: 200,
+    status: status ?? HttpStatus.OK,
     data,
   };
 }
