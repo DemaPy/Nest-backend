@@ -17,14 +17,20 @@ model User {
   id    Int     @default(autoincrement()) @id
   email String  @unique
   name  String?
-  posts Post[]
 }
 
-model Post {
+model JobPortal {
+  id Int @default(autoincrement()) @id
+  label String
+  baseUrl String
+  parsing JobPortalParsing[]
+}
+
+model JobPortalParsing {
   id        Int      @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  url       String
+  content   String
+  jobPortalId Int
+  JobPortal JobPortal @relation(fields: [jobPortalId], references: [id])
+  createdAt        DateTime           @default(now())
 }

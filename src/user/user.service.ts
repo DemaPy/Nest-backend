@@ -12,12 +12,6 @@ export class UserService {
       data: {
         email: createUserDto.email,
         name: createUserDto.name,
-        posts: {
-          create: {
-            title: 'New post',
-            content: 'hello world',
-          },
-        },
       },
     });
   }
