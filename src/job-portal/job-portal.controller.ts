@@ -26,7 +26,7 @@ export class JobController {
   @Get('id')
   async getOne(@Param() id: string) {
     try {
-      return responseObject({ data: await this.jobService.getOne(+id) });
+      return responseObject({ data: await this.jobService.getOne(id) });
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

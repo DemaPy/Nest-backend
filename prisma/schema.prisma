@@ -14,23 +14,37 @@ datasource db {
 }
 
 model User {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
-  name  String?
+  id            String  @id @default(uuid())
+  email         String  @unique
+  locale        String  @default("en-US")
+  emailVerified Boolean @default(false)
+  name          String?
+  secrets       Secret?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Secret {
+  id                String @id @default(uuid())
+  userId            String @unique
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verificationToken String?
+  password          String?
 }
 
 model JobPortal {
-  id Int @default(autoincrement()) @id
-  label String
+  id      String             @id @default(uuid())
+  label   String
   baseUrl String
   parsing JobPortalParsing[]
 }
 
 model JobPortalParsing {
-  id        Int      @default(autoincrement()) @id
-  url       String
-  content   String
-  jobPortalId Int
-  JobPortal JobPortal @relation(fields: [jobPortalId], references: [id])
-  createdAt        DateTime           @default(now())
+  id          String    @id @default(uuid())
+  url         String
+  content     String
+  jobPortalId String
+  JobPortal   JobPortal @relation(fields: [jobPortalId], references: [id])
+  createdAt   DateTime  @default(now())
 }

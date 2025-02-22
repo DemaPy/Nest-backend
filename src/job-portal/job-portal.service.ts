@@ -29,7 +29,7 @@ export class JobService {
         })
     }
 
-    async getOne(id: number) {
+    async getOne(id: string) {
         return this.prisma.jobPortal.findUnique({
             where: {
                 id,

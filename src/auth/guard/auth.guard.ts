@@ -5,9 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { PrismaService } from 'src/database/database.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+
+  constructor(private prismaService: PrismaService) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
@@ -16,21 +20,12 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await new Promise((res) => {
-        setTimeout(() => {
-          if (token === 'mysecrettoken') {
-            res({
-              username: 'Demchenko',
-              age: 27,
-              email: 'markdiper22@gmail.com',
-              password: "qwerty"
-            });
-          }
-        }, 400);
-      });
+      const user = await this.prismaService.user.findUnique({
+        where: { id: token }
+      })
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      request['user'] = payload;
+      request['user'] = user;
     } catch {
       throw new UnauthorizedException();
     }

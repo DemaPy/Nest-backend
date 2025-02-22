@@ -15,24 +15,20 @@ import {
   Headers,
   UseGuards,
   Request,
-} from '@nestjs/common';
-import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from '@prisma/client';
-import { responseObject } from 'src/utils/responseInterface';
-import { AuthGuard } from 'src/auth/guard/auth.guard';
+} from "@nestjs/common";
+import { UserService } from "./user.service";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { User } from "@prisma/client";
+import { responseObject } from "src/utils/responseInterface";
+import { AuthGuard } from "src/auth/guard/auth.guard";
 
-@Controller('users')
+@Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
   create(@Body() createUserDto: User) {
-    return this.userService.create({
-      email: 'benderdema@gmail.com',
-      id: 1,
-      name: 'Dema',
-    });
+    return this.userService.create(createUserDto);
   }
 
   @Get()
@@ -45,13 +41,13 @@ export class UserController {
     }
   }
 
-  @Get(':id')
+  @Get(":id")
   @UseGuards(AuthGuard)
-  async findOne(@Param('id', ParseIntPipe) id: string) {
+  async findOne(@Param("id", ParseIntPipe) id: string) {
     try {
-      const user = await this.userService.findOne(+id);
+      const user = await this.userService.findOne(id);
       if (!user) {
-        return new HttpException('User not found', HttpStatus.NOT_FOUND)
+        return new HttpException("User not found", HttpStatus.NOT_FOUND);
       }
       return responseObject({ data: user });
     } catch (error) {
@@ -59,13 +55,16 @@ export class UserController {
     }
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Patch(":id")
+  update(
+    @Param("id", ParseIntPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    return this.userService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  @Delete(":id")
+  remove(@Param("id", ParseIntPipe) id: string) {
     return this.userService.remove(+id);
   }
 }

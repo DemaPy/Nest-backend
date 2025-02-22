@@ -14,7 +14,7 @@ export class JobScanService {
         }
     ]
 
-    @Cron("30 * * * * *")
+    // @Cron("30 * * * * *")
     async parseJobs() {
         const jobPortals = await this.prisma.jobPortal.findMany({
             include: {
