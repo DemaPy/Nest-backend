@@ -15,6 +15,7 @@ import { JobPortalModule } from "./job-portal/job-portal.module";
 import { MailModule } from "./mail/mail.module";
 import { APP_PIPE } from "@nestjs/core";
 import { ZodValidationPipe } from "nestjs-zod";
+import { StripeModule } from "./stripe/stripe.module";
 
 const middlewareRoutes = {
   path: "users",
@@ -26,10 +27,13 @@ const middlewareRoutes = {
     CampaignsModule,
     ConfigModule,
     AuthModule,
-    ScheduleModule.forRoot(),
     UserModule,
     JobPortalModule,
     MailModule,
+  
+  
+    ScheduleModule.forRoot(),
+    StripeModule.forRootAsync(),
   ],
   providers: [
     JobScanService,

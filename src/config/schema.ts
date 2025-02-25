@@ -11,6 +11,8 @@ export const configSchema = z.object({
   EMAIL_PORT: z.string(),
   EMAIL_USERNAME: z.string(),
   EMAIL_PASSWORD: z.string(),
+
+  STRIPE_API_KEY: z.string()
 });
 
 export type Config = z.infer<typeof configSchema>;
